@@ -1,5 +1,5 @@
 const {
-  definePrismAgent,
+  createPrismAgentElementClass,
   toPrismError,
 } = await import("https://prismcustomagentregistry.blob.core.windows.net/custom-agents/src/index.js");
 
@@ -84,11 +84,7 @@ function ensureView(root) {
   };
 }
 
-export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent", {
-  registration: {
-    agentId: "inventory-explorer",
-    manifestVersion: "0.1",
-  },
+export class InventoryExplorerAgentElement extends createPrismAgentElementClass({
   title: "Inventory Explorer",
 
   async initialize({ host, prism, root }) {
@@ -163,4 +159,6 @@ export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent
 
     ensureView(root);
   },
-});
+}) {}
+
+export default InventoryExplorerAgentElement;
