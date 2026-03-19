@@ -1,8 +1,7 @@
-import {
-  createAgentManifest,
+const {
   definePrismAgent,
   toPrismError,
-} from "../src/index.js";
+} = await import("https://prismcustomagentregistry.blob.core.windows.net/custom-agents/src/index.js");
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -75,6 +74,10 @@ function ensureView(root) {
 }
 
 export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent", {
+  registration: {
+    agentId: "inventory-explorer",
+    manifestVersion: "0.1",
+  },
   title: "Inventory Explorer",
 
   async initialize({ host, root }) {
@@ -145,31 +148,5 @@ export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent
     }
 
     ensureView(root);
-  },
-});
-
-export const inventoryExplorerManifest = createAgentManifest({
-  agentId: "inventory-explorer",
-  displayName: "Inventory Explorer",
-  description: "Investigates stock issues and summarizes ERP findings.",
-  entrypoint: {
-    url: "https://example.org/agents/inventory-explorer-agent.js",
-  },
-  webComponent: {
-    tagName: "inventory-explorer-agent",
-  },
-  presentation: {
-    placement: "page",
-    defaultSize: "full",
-  },
-  capabilities: {
-    erp: true,
-    llm: true,
-    storage: true,
-  },
-  support: {
-    owner: "Epicor Labs",
-    documentationUrl: "https://example.org/docs/inventory-explorer",
-    sourceUrl: "https://example.org/repo/inventory-explorer",
   },
 });
