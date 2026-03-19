@@ -1,7 +1,7 @@
 const {
   definePrismAgent,
   toPrismError,
-} = await import("https://prismcustomagentregistry.blob.core.windows.net/src/index.js");
+} = await import("https://prismcustomagentregistry.blob.core.windows.net/custom-agents/src/index.js");
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -26,6 +26,15 @@ template.innerHTML = `
     p {
       margin: 0 0 12px;
       color: #41536a;
+    }
+
+    .debug {
+      border-radius: 12px;
+      background: #eef5fb;
+      color: #183153;
+      font: 600 12px/1.4 "Segoe UI", system-ui, sans-serif;
+      margin-bottom: 12px;
+      padding: 10px 12px;
     }
 
     button {
@@ -54,6 +63,7 @@ template.innerHTML = `
   </style>
   <section class="panel">
     <h2>Inventory Explorer</h2>
+    <div class="debug" data-role="debug">Waiting for Prism registration context.</div>
     <p data-role="summary">Waiting for Prism session context.</p>
     <button type="button">Load sample BAQ</button>
     <pre data-role="output" hidden></pre>
@@ -67,6 +77,7 @@ function ensureView(root) {
   }
 
   return {
+    debug: root.querySelector('[data-role="debug"]'),
     summary: root.querySelector('[data-role="summary"]'),
     button: root.querySelector("button"),
     output: root.querySelector('[data-role="output"]'),
@@ -80,8 +91,10 @@ export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent
   },
   title: "Inventory Explorer",
 
-  async initialize({ host, root }) {
+  async initialize({ host, prism, root }) {
     const view = ensureView(root);
+
+    view.debug.textContent = `Runtime agent: ${prism.agent?.id ?? "unknown"} | manifest: ${prism.agent?.manifestVersion ?? "unknown"}`;
 
     if (view.button.dataset.bound === "true") {
       return;
@@ -129,6 +142,7 @@ export const InventoryExplorerAgent = definePrismAgent("inventory-explorer-agent
 
   connect({ host, prism, root }) {
     const view = ensureView(root);
+    view.debug.textContent = `Runtime agent: ${prism.agent?.id ?? "unknown"} | manifest: ${prism.agent?.manifestVersion ?? "unknown"}`;
     view.summary.textContent = `Connected as ${prism.session.userId} in ${prism.context.erp}.`;
 
     host.subscribe("context.changed", (nextContext) => {
