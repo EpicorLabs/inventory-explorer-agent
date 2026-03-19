@@ -1,7 +1,7 @@
 const {
   createPrismAgentElementClass,
   toPrismError,
-} = await import("https://prismcustomagentregistry.blob.core.windows.net/custom-agents/src/index.js");
+} = await import("https://prismcustomagentregistry.blob.core.windows.net/src/index.js");
 
 const template = document.createElement("template");
 template.innerHTML = `
